@@ -4,7 +4,12 @@ import Link from "next/link";
 import { MdAddTask } from "react-icons/md";
 
 const getAllTasks = async (): Promise<TaskDocument[]> => {
-  const response = await fetch(`${process.env.API_URL}/tasks`, {
+  const apiUrl = process.env.API_URL || "";
+  if (!apiUrl) {
+    console.error("API_URL is not defined");
+    return [];
+  }
+  const response = await fetch(`${apiUrl}/tasks`, {
     cache: "no-store",
   });
   if (response.status !== 200) {
@@ -16,7 +21,16 @@ const getAllTasks = async (): Promise<TaskDocument[]> => {
 };
 
 export default async function MainPage() {
-  const allTasks = await getAllTasks();
+  let allTasks: TaskDocument[] = [];
+  let error: string | null = null;
+
+  try {
+    allTasks = await getAllTasks();
+  } catch (err) {
+    console.error("Failed to fetch tasks:", err);
+    error = "タスクの取得に失敗しました。";
+  }
+
   return (
     <div className='text-gray-800 h-full overflow-auto pb-24 p-8'>
       <header className='flex justify-between items-center '>
@@ -29,11 +43,15 @@ export default async function MainPage() {
           <div>Add Task</div>
         </Link>
       </header>
-      <div className='mt-8 flex flex-wrap gap-4'>
-        {allTasks.map((task) => (
-          <TaskCard key={task._id} task={task} />
-        ))}
-      </div>
+      {error ? (
+        <p className='text-red-500 mt-4'>{error}</p>
+      ) : (
+        <div className='mt-8 flex flex-wrap gap-4'>
+          {allTasks.map((task) => (
+            <TaskCard key={task._id} task={task} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
