@@ -1,0 +1,70 @@
+"use client";
+
+import { createTask, FormState } from "@/actions/task";
+import React from "react";
+import { useFormState, useFormStatus } from "react-dom";
+
+const NewTaskForm = () => {
+  const initialState: FormState = {
+    error: "",
+  };
+  const [formState, formAction] = useFormState(createTask, initialState);
+
+  const SubmitButton = () => {
+    const { pending } = useFormStatus();
+    return (
+      <button
+        type='submit'
+        className='mt-8 py-2 w-full rounded-md text-white bg-gray-800 hover:bg-green-700 text-sm font-semibold sdsm disabled:bg-red-400'
+        disabled={pending}
+      >
+        {pending ? "Creating..." : "Create"}
+      </button>
+    );
+  };
+  return (
+    <div className='mt-10 mx-auto w-full max-w-sm'>
+      <form action={formAction}>
+        <div>
+          <label htmlFor='title' className='block text-sm font-medium'>
+            Title
+          </label>
+          <input
+            type='text'
+            id='title'
+            name='title'
+            className='mt-2 block w-full rounded-md border-gray-300 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600'
+          />
+        </div>
+        <div className='mt-6'>
+          <label htmlFor='description' className='block text-sm font-medium'>
+            Description
+          </label>
+          <input
+            type='text'
+            id='description'
+            name='description'
+            className='mt-2 block w-full rounded-md border-gray-300 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600'
+          />
+        </div>
+        <div className='mt-6'>
+          <label htmlFor='dueDate' className='block text-sm font-medium'>
+            Due Date
+          </label>
+          <input
+            type='date'
+            id='dueDate'
+            name='dueDate'
+            min='2000-01-01'
+            max='2100-12-31'
+            className='mt-2 block w-full rounded-md border-gray-300 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600'
+          />
+        </div>
+        <SubmitButton />
+        {formState.error && <p className='text-red-500'>{formState.error}</p>}
+      </form>
+    </div>
+  );
+};
+
+export default NewTaskForm;
