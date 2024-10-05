@@ -57,7 +57,7 @@ const NewTaskForm = () => {
             name='dueDate'
             min='2000-01-01'
             max='2100-12-31'
-            className='p-2mt-2 block w-full rounded-md border-gray-300 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600'
+            className='p-2 mt-2 block w-full rounded-md border-gray-300 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600'
           />
         </div>
         <SubmitButton />
